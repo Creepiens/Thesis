@@ -4,7 +4,6 @@ Created on Fri Mar  7 09:00:41 2025
 
 @author: grljbeur
 """
-
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
@@ -12,11 +11,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
+import random
 
 # Paramètres du système
 C1 = 1.0
-C2 = 1.0
+C2 = 5.0
 h = 0.5
+rdm = False
 
 # Fonction pour les équations différentielles
 def system(t, T, P1, P2):
@@ -30,7 +31,14 @@ def P1(t):
     return np.sin(t)
 
 def P2(t):
-    return np.cos(t)
+    global rdm
+    if rdm == False :
+        return np.cos(t)
+    else :
+        if np.isscalar(t):
+            return random.random() - 0.5
+        else:
+            return np.array([random.random() - 0.5 for _ in t])
 
 # Conditions initiales
 T1_0 = 0.0
@@ -164,3 +172,4 @@ plt.plot(t_eval[sample_length-1+len(y_train):sample_length-1+len(y_train)+len(y_
 plt.legend()
 plt.title('Prédictions sur les données de test')
 plt.show()
+
